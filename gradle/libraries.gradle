@@ -1,0 +1,55 @@
+ext {
+  dropwizardVersion = '0.9.1'
+  dropwizardMetricsVersion = '3.1.2'
+  hamcrestVersion = '2.0.0.0'
+  jackson2Version = '2.6.1'
+  jerseyVersion = '2.21'
+  junitVersion = '4.12'
+  
+  libraries = [
+  	dropwizard_auth: "io.dropwizard:dropwizard-auth:${dropwizardVersion}",
+  	dropwizard_assets: "io.dropwizard:dropwizard-assets:${dropwizardVersion}",
+    dropwizard_core: "io.dropwizard:dropwizard-core:${dropwizardVersion}",
+    dropwizard_testing: "io.dropwizard:dropwizard-testing:${dropwizardVersion}",
+    dropwizard_metrics_annotation: "io.dropwizard.metrics:metrics-annotation:${dropwizardMetricsVersion}",
+    dropwizard_metrics_core: "io.dropwizard.metrics:metrics-core:${dropwizardMetricsVersion}",
+    dropwizard_logging: "io.dropwizard:dropwizard-logging:${dropwizardVersion}",
+    dropwizard_metrics_healthchecks: "io.dropwizard.metrics:metrics-healthchecks:${dropwizardMetricsVersion}",
+    dropwizard_metrics_jersey2: "io.dropwizard.metrics:metrics-jersey2:${dropwizardMetricsVersion}",
+    dropwizard_metrics_jetty9: "io.dropwizard.metrics:metrics-jetty9:${dropwizardMetricsVersion}",
+    dropwizard_metrics_jvm: "io.dropwizard.metrics:metrics-jvm:${dropwizardMetricsVersion}",
+    dropwizard_metrics_logback: "io.dropwizard.metrics:metrics-logback:${dropwizardMetricsVersion}",
+    dropwizard_metrics_servlet: "io.dropwizard.metrics:metrics-servlet:${dropwizardMetricsVersion}",
+    dropwizard_metrics_servlets: "io.dropwizard.metrics:metrics-servlets:${dropwizardMetricsVersion}",
+    dropwizard_forms: "io.dropwizard:dropwizard-forms:${dropwizardVersion}",
+    hamcrest: "org.hamcrest:java-hamcrest:${hamcrestVersion}",
+    jackson2_annotations: "com.fasterxml.jackson.core:jackson-annotations:${jackson2Version}",
+    jackson2_core: "com.fasterxml.jackson.core:jackson-core:${jackson2Version}",
+    jackson2_databind: "com.fasterxml.jackson.core:jackson-databind:${jackson2Version}",
+    jackson2_dataformat_yaml: "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jackson2Version}",
+    jackson2_datatype_guava: "com.fasterxml.jackson.datatype:jackson-datatype-guava:${jackson2Version}",
+    jackson2_datatype_jdk7: "com.fasterxml.jackson.datatype:jackson-datatype-jdk7:${jackson2Version}",
+    jackson2_datatype_jdk8: "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${jackson2Version}",
+    jackson2_datatype_joda: "com.fasterxml.jackson.datatype:jackson-datatype-joda:${jackson2Version}",
+    jackson2_datatype_jsr310: "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jackson2Version}",
+    jackson2_jaxrs_base: "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:${jackson2Version}",
+    jackson2_jaxrs_json_provider: "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${jackson2Version}",
+    jackson2_jaxrs_yaml_provider: "com.fasterxml.jackson.jaxrs:jackson-jaxrs-yaml-provider:${jackson2Version}",
+    jackson2_module_afterburner: "com.fasterxml.jackson.module:jackson-module-afterburner:${jackson2Version}",
+	jersey_client: "org.glassfish.jersey.core:jersey-client:${jerseyVersion}",
+    jersey_common: "org.glassfish.jersey.core:jersey-common:${jerseyVersion}",
+    jersey_container_servlet: "org.glassfish.jersey.containers:jersey-container-servlet:${jerseyVersion}",
+    jersey_container_servlet_core: "org.glassfish.jersey.containers:jersey-container-servlet-core:${jerseyVersion}",
+    jersey_ext_bean_validation: "org.glassfish.jersey.ext:jersey-bean-validation:${jerseyVersion}",
+    jersey_ext_cdi: "org.glassfish.jersey.ext.cdi:jersey-cdi1x:${jerseyVersion}",
+    jersey_media_json_jackson: "org.glassfish.jersey.media:jersey-media-json-jackson:${jerseyVersion}",
+    jersey_media_json_processing: "org.glassfish.jersey.media:jersey-media-json-processing:${jerseyVersion}",
+    jersey_media_multipart: "org.glassfish.jersey.media:jersey-media-multipart:${jerseyVersion}",
+    jersey_metainf_services: "org.glassfish.jersey.ext:jersey-metainf-services:${jerseyVersion}",
+    jersey_server: "org.glassfish.jersey.core:jersey-server:${jerseyVersion}",
+    jersey_test_framework_util: "org.glassfish.jersey.test-framework:jersey-test-framework-util:${jerseyVersion}",
+    jersey_apache_connector: "org.glassfish.jersey.connectors:jersey-apache-connector:${jerseyVersion}",    
+  	junit: "junit:junit:${junitVersion}",
+  ]
+
+}
