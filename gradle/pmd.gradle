@@ -1,0 +1,40 @@
+apply plugin: 'pmd'
+apply from: "$rootDir/gradle/libraries.gradle"
+
+ext {
+    failOnCheckstyleError = project.hasProperty('failOnCheckstyleError') && Boolean.valueOf(project.failOnCheckstyleError)
+}
+
+configurations {
+    pmd
+}
+
+dependencies {
+    pmd(libraries.pmd)
+}
+
+
+pmd {
+    toolVersion = pmdVersion
+    ruleSetFiles = files("${rootDir}/etc/pmd/deepsource-ruleset.xml")
+    ruleSets = []
+    targetJdk = '1.7'
+}
+
+def pmdTasks = tasks.matching { task ->
+    [ org.gradle.api.plugins.quality.Pmd ].any {
+it.isInstance(task) }
+}
+def cleanPmdTasks = tasks.matching { task ->
+    [ org.gradle.api.plugins.quality.Pmd ].any {
+it.isInstance(task) }
+}.collect {
+    "clean${it.name.substring(0,1).capitalize()}${it.name.substring(1)}"
+}
+
+task pmd {
+    dependsOn pmdTasks
+}
+
+cleanPmd.dependsOn cleanPmdTasks
+

@@ -1,0 +1,78 @@
+
+<FindBugsFilter>
+
+    <Match>
+      <!-- 
+      	immutables uses @Nullable and looks like a false-positive:
+		http://sourceforge.net/p/findbugs/bugs/1385/ 
+      -->
+      <Bug pattern="NP_METHOD_PARAMETER_TIGHTENS_ANNOTATION"/>
+    </Match>
+
+    <!--
+        Sure, these inner classes might be more efficient if they
+        were static, but the code would be harder to read too.
+    -->
+    <Match>
+        <Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON"/>
+    </Match>
+
+    <!--
+        We ignore Exception all over the place.  Mostly it's on purpose.
+    -->
+    <Match>
+        <Bug pattern="DE_MIGHT_IGNORE"/>
+    </Match>
+
+    <!--
+        And sometimes we catch Exception even though it's not throw,
+        just to be sure to catch any problems that might occur.
+    -->
+    <Match>
+        <Bug pattern="REC_CATCH_EXCEPTION"/>
+    </Match>
+
+    <!--
+        Lots of classes extend serializable classes but we never depend
+        on their serialized state, so we don't worry about this.
+    -->
+    <Match>
+        <Bug pattern="SE_NO_SERIALVERSIONID"/>
+    </Match>
+
+    <!--
+        We do I/O using the default encoding everywhere, usually
+        to local files that we expect to be encoded with the default
+        encoding.
+    -->
+    <Match>
+        <Bug pattern="DM_DEFAULT_ENCODING"/>
+    </Match>
+
+    <!--
+        Exclude all low priority bugs in the EJB CMP code,
+		which we really don't want to touch.
+    -->
+    <!-- Match>
+        <Or>
+            <Priority value="2"/>
+            <Priority value="3"/>
+        </Or>
+        <Or>
+            <Class name="~com\.sun\.jdo\.spi\.persistence\..*"/>
+            <Class name="~com\.sun\.jdo\.api\.persistence\..*"/>
+        </Or>
+    </Match -->
+
+    <!--
+        Exclude these logging related errors for now.
+        There are way too many of these errors and we need to reduce
+        the error count before we can check these by default.
+    -->
+    <!-- Match>
+        <Or>
+            <Bug pattern="GF_MISSING_LOGMESSAGE_INFO_ANNOTATION"/>
+            <Bug pattern="GF_INVALID_MSG_ID_PATTERN"/>
+        </Or>
+    </Match -->
+</FindBugsFilter>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<ruleset name="Deepsource ruleset"
+    xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+  <description>
+  This is the Deepsource PMD ruleset.
+  </description>
+  <rule ref="rulesets/java/imports.xml">
+      <!-- static imports are good, especially in tests -->
+      <exclude name="TooManyStaticImports"/>
+  </rule>
+  <rule ref="rulesets/java/logging-java.xml/AvoidPrintStackTrace"/>
+  <rule ref="rulesets/java/logging-java.xml/SystemPrintln"/>
+  <rule ref="rulesets/java/unusedcode.xml">
+      <!-- TODO: remove once we figure out how to get rid of the violations -->
+      <!--  exclude name="UnusedFormalParameter"/ -->
+      <exclude name="UnusedModifier"/>
+      <!-- Keep getting false positives here - used methods reported as
+      unused, we do care about this but not if we can't report it right -->
+      <!-- exclude name="UnusedPrivateMethod"/ -->
+  </rule>
+</ruleset>

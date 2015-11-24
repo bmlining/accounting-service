@@ -1,0 +1,46 @@
+import org.gradle.api.internal.project.IsolatedAntBuilder
+
+apply plugin: 'java-base'
+apply from: "$rootDir/gradle/libraries.gradle"
+
+configurations {
+    jdepend
+}
+
+dependencies {
+    jdepend(libraries.jdepend)
+    jdepend(libraries.jdepend_ant)
+}
+
+
+task jdependMain() { task ->
+    dependsOn(sourceSets.main.output)
+    project.tasks['check'].dependsOn(task)
+    outputs.dir reporting.file("jdepend")
+}
+
+jdependMain << {
+    services.get(IsolatedAntBuilder).withClasspath(configurations.jdepend).execute {
+        def xmlReportFile = new File(reporting.file("jdepend"), 'main.xml')
+        xmlReportFile.parentFile.mkdirs()
+
+        ant.taskdef(name: 'jdependreport',
+                    classname: 'org.apache.tools.ant.taskdefs.optional.jdepend.JDependTask')
+        ant.jdependreport(outputFile: xmlReportFile.absolutePath,
+                          format: 'xml', haltonerror: true) {
+            exclude(name: 'java.*')
+            exclude(name: 'javax.*')
+            classespath {
+                pathElement(location: sourceSets.main.output.classesDir)
+            }
+        }
+        def htmlReportFile = new File(xmlReportFile.parentFile,
+                                      xmlReportFile.name.replaceAll(/\.xml$/, '.html'))
+        htmlReportFile.delete()
+        ant.xslt(in: xmlReportFile.absolutePath, out: htmlReportFile.absolutePath) {
+            style {
+                url(url: new File(rootDir, 'etc/jdepend/jdepend.xsl').toURI())
+            }
+        }
+    }
+}

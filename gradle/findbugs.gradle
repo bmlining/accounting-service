@@ -1,0 +1,119 @@
+apply plugin: "findbugs"
+
+import groovy.xml.StreamingMarkupBuilder
+import groovy.xml.XmlUtil
+
+configurations {
+    findbugs
+    findbugsArtifact { transitive = false }
+}
+
+dependencies {
+    findbugs(libraries.findbugs)
+    findbugsArtifact(libraries.findbugs)
+}
+
+ext {
+    commonExcludeFile = new File("${rootDir}/etc/findbugs/exclude-common.xml")
+    mergedExcludeFile = project.file("${project.buildDir}/findbugs-exclude-merged.xml")
+    projectExcludeFile = project.file('findbugs-exclude.xml')
+}
+
+// If a project specific exclude/include file exists, merge it with the global 
+// exclude file, then point to the merged file.
+// (Since the findbugs plugin only allows one exclude file to be specified)
+def mergeFindBugsFilterXml(File commonXml, File projectXml, File outputXml) {
+    assert commonXml.exists(), "Common findbugs XML filter ${commonXml.absolutePath} must exist"
+
+    outputXml.getParentFile().mkdirs()
+
+    if (!projectXml.exists()) {
+        project.copy {
+            from commonXml
+            into outputXml.parentFile
+            rename { outputXml.name }
+        }
+        return
+    }
+
+    def merged = new StreamingMarkupBuilder().bind {
+        def sl = new XmlSlurper()
+        FindBugsFilter {
+            [commonXml, projectXml].each { mkp.yield sl.parse(it).Match }
+        }
+    }
+
+    def mergedText = XmlUtil.serialize(merged)
+    outputXml << mergedText
+}
+
+task mergeFindbugsExcludeFiles {
+    inputs.files commonExcludeFile
+    if (commonExcludeFile.exists()) {
+        inputs.files commonExcludeFile
+    }
+    if (projectExcludeFile.exists()) {
+        inputs.files projectExcludeFile
+    }
+    outputs.file mergedExcludeFile
+
+    doLast {
+        mergeFindBugsFilterXml(commonExcludeFile, projectExcludeFile, mergedExcludeFile)
+    }
+}
+
+findbugs { findbugsTask ->
+    excludeFilter = mergedExcludeFile
+
+    sourceSets = [sourceSets.main]
+    ignoreFailures = false
+    reportsDir = file("$project.buildDir/findbugsReports")
+    effort = project.hasProperty('findbugsEffort') ? project.findbugsEffort : 'max'
+    reportLevel = project.hasProperty('findbugsReportLevel') ? project.findbugsReportLevel : 'low'
+
+}
+
+tasks.withType(FindBugs) { findbugsTask ->
+    dependsOn mergeFindbugsExcludeFiles
+
+    reports {
+        xml {
+            enabled = true
+            withMessages = true
+        }
+    }
+
+    task "${findbugsTask.name}HtmlReport"() {
+        def xmlReportFile = findbugsTask.reports.xml.destination
+        def htmlReportFile = new File(xmlReportFile.parentFile,
+                                      xmlReportFile.name.replaceAll(/\.xml$/, '.html'))
+
+        inputs.file  xmlReportFile
+        inputs.files  configurations.findbugsArtifact
+        outputs.file  htmlReportFile
+
+        doLast {
+            def xsltFile = project.resources.text.fromArchiveEntry(
+                configurations.findbugsArtifact, "color.xsl").asFile()
+            htmlReportFile.delete()
+            ant.xslt(in: xmlReportFile.absolutePath, out: htmlReportFile.absolutePath,
+                style: xsltFile.absolutePath)
+        }
+    }
+    findbugsTask.finalizedBy "${findbugsTask.name}HtmlReport"
+}
+
+
+task findbugsGui << {
+    def findbugsArgs = []
+
+    def xmlReportFile = findbugsMain.reports.xml.destination
+    if (xmlReportFile.exists()) {
+        findbugsArgs << xmlReportFile.absolutePath
+    }
+    project.javaexec {
+        main = 'edu.umd.cs.findbugs.LaunchAppropriateUI'
+        classpath = project.configurations.findbugs
+        args = findbugsArgs
+    }
+}

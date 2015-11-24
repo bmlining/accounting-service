@@ -1,0 +1,47 @@
+apply plugin: 'checkstyle'
+apply from: "$rootDir/gradle/libraries.gradle"
+
+ext {
+    failOnCheckstyleError = project.hasProperty('failOnCheckstyleError') && Boolean.valueOf(project.failOnCheckstyleError)
+}
+
+configurations {
+    checkstyle
+    checkstyleOnly {
+        transitive = false
+    }
+}
+
+dependencies {
+    checkstyle(libraries.checkstyle)
+    checkstyleOnly(libraries.checkstyle)
+}
+
+
+checkstyle {
+
+    def googleChecksTextResource = project.resources.text.fromFile(
+        project.file("${rootDir}/etc/checkstyle/customized_google_checks.xml"))
+    config = googleChecksTextResource
+    ignoreFailures = false
+    configProperties = [
+        'checkstyle.severity': failOnCheckstyleError ? 'error' : 'warning', 
+        'checkstyle.suppression.file': "${rootDir}/etc/checkstyle/suppressions.xml",
+    ]
+}
+
+def checkstyleTasks = tasks.matching { task ->
+    [ org.gradle.api.plugins.quality.Checkstyle ].any { it.isInstance(task) }
+}
+def cleanCheckstyleTasks = tasks.matching { task ->
+    [ org.gradle.api.plugins.quality.Checkstyle ].any { it.isInstance(task) }
+}.collect {
+    "clean${it.name.substring(0,1).capitalize()}${it.name.substring(1)}"
+}
+
+task checkstyle {
+    dependsOn checkstyleTasks
+}
+
+cleanCheckstyle.dependsOn cleanCheckstyleTasks
+

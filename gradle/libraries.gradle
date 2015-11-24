@@ -1,12 +1,21 @@
 ext {
+  antJDependVersion = '1.9.3'
+  checkstyleVersion = '6.11.1'
   dropwizardVersion = '0.9.1'
   dropwizardMetricsVersion = '3.1.2'
+  findbugsVersion = '3.0.1'
   hamcrestVersion = '2.0.0.0'
+  immutablesVersion = '2.0.21'
+  jacocoVersion = '0.7.4.201502262128'
   jackson2Version = '2.6.1'
+  jdependVersion = '2.9.1'
   jerseyVersion = '2.21'
   junitVersion = '4.12'
+  pmdVersion = '5.3.3'
   
   libraries = [
+    
+  	checkstyle: "com.puppycrawl.tools:checkstyle:${checkstyleVersion}",
   	dropwizard_auth: "io.dropwizard:dropwizard-auth:${dropwizardVersion}",
   	dropwizard_assets: "io.dropwizard:dropwizard-assets:${dropwizardVersion}",
     dropwizard_core: "io.dropwizard:dropwizard-core:${dropwizardVersion}",
@@ -22,7 +31,13 @@ ext {
     dropwizard_metrics_servlet: "io.dropwizard.metrics:metrics-servlet:${dropwizardMetricsVersion}",
     dropwizard_metrics_servlets: "io.dropwizard.metrics:metrics-servlets:${dropwizardMetricsVersion}",
     dropwizard_forms: "io.dropwizard:dropwizard-forms:${dropwizardVersion}",
+    findbugs: "com.google.code.findbugs:findbugs:${findbugsVersion}",
+    findbugs_jsr305: "com.google.code.findbugs:jsr305:3.0.0",
     hamcrest: "org.hamcrest:java-hamcrest:${hamcrestVersion}",
+    immutables: "org.immutables:value:${immutablesVersion}",
+    jacoco_agent: "org.jacoco:org.jacoco.agent:${jacocoVersion}",
+    jacoco_agent_runtime: "org.jacoco:org.jacoco.agent:${jacocoVersion}:runtime",
+    jacoco_ant: "org.jacoco:org.jacoco.ant:${jacocoVersion}",
     jackson2_annotations: "com.fasterxml.jackson.core:jackson-annotations:${jackson2Version}",
     jackson2_core: "com.fasterxml.jackson.core:jackson-core:${jackson2Version}",
     jackson2_databind: "com.fasterxml.jackson.core:jackson-databind:${jackson2Version}",
@@ -36,6 +51,8 @@ ext {
     jackson2_jaxrs_json_provider: "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${jackson2Version}",
     jackson2_jaxrs_yaml_provider: "com.fasterxml.jackson.jaxrs:jackson-jaxrs-yaml-provider:${jackson2Version}",
     jackson2_module_afterburner: "com.fasterxml.jackson.module:jackson-module-afterburner:${jackson2Version}",
+	jdepend: "jdepend:jdepend:${jdependVersion}",
+	jdepend_ant: "org.apache.ant:ant-jdepend:${antJDependVersion}",
 	jersey_client: "org.glassfish.jersey.core:jersey-client:${jerseyVersion}",
     jersey_common: "org.glassfish.jersey.core:jersey-common:${jerseyVersion}",
     jersey_container_servlet: "org.glassfish.jersey.containers:jersey-container-servlet:${jerseyVersion}",
@@ -50,6 +67,7 @@ ext {
     jersey_test_framework_util: "org.glassfish.jersey.test-framework:jersey-test-framework-util:${jerseyVersion}",
     jersey_apache_connector: "org.glassfish.jersey.connectors:jersey-apache-connector:${jerseyVersion}",    
   	junit: "junit:junit:${junitVersion}",
+  	pmd: "net.sourceforge.pmd:pmd-java:${pmdVersion}",
   ]
 
 }

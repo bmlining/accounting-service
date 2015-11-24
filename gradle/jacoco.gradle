@@ -1,0 +1,49 @@
+apply plugin: 'jacoco'
+apply from: "$rootDir/gradle/libraries.gradle"
+
+ext {
+    jacocoDir = file("$buildDir/jacoco")
+}
+
+configurations {
+    jacocoAgentRuntime
+    jacocoAgent
+    jacocoAnt
+}
+
+dependencies {
+    jacocoAgent(libraries.jacoco_agent)
+    jacocoAgentRuntime(libraries.jacoco_agent_runtime) 
+    jacocoAnt(libraries.jacoco_ant) 
+}
+
+
+jacoco {
+    reportsDir = file("${buildDir.absolutePath}/reports/jacoco")
+}
+
+tasks.withType(Test) { task ->
+    def jacocoExecFile = file("$jacocoDir/jacoco${task.name}.exec")
+    jacoco {
+        enabled = project.hasProperty('enableJacoco')
+        append = true
+        destinationFile = jacocoExecFile
+        classDumpFile = file("$buildDir/jacoco/classpathdumps")
+    }
+    jacocoTestReport.dependsOn task
+    doFirst {
+        // Hook to propagate agent args to child JVMs forked from test code
+        environment 'FORKED_JVM_ARGS', "-javaagent:${configurations.jacocoAgentRuntime.singleFile.absolutePath}=destfile=${jacocoExecFile.absolutePath}"
+    }
+}
+
+tasks.withType(JacocoReport) {
+    reports {
+        xml.enabled true
+        html.enabled true
+        csv.enabled false
+    }
+    executionData tasks.withType(Test)
+}
+
+check.dependsOn jacocoTestReport
